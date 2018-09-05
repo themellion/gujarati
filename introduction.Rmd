@@ -1,0 +1,76 @@
+---
+title: "D.N. Gujarati, Basic Econometrics, 4ed"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook where we solve (show) exercises (examples) found in D.N. Gujarati, Basic Econometrics, 4ed.   
+
+## Introduction
+
+```{r}
+# turn off scientific notation
+options(scipen=999)
+
+# define a local package repository
+.libPaths('C:/Users/kwsta/Dropbox/R/libraries')
+
+# define the current working directory
+setwd('C:/Users/kwsta/Dropbox/R/Gujarati')
+
+# load required packages
+library('readxl')
+library('tidyverse')
+```
+
+
+```{r}
+# load the required data
+# data represent the 
+tableI1 <- read_excel('5e_data_sets/Table I_1_2004.xls', skip = 4, col_names = FALSE)
+```
+
+
+```{r}
+# add names on tableI1
+names(tableI1) <- c('Year', 'Consumption', 'GDP')
+```
+
+
+```{r}
+# use data between 1982 and 1996. 
+table81_96 <- tableI1 %>% filter(Year %in% c("1982", "1983", "1984", 
+                                             "1985", "1986", "1987", "1988",
+                                             "1989", "1990", "1991", "1992", 
+                                             "1993", "1994", "1995", "1996"))
+```
+
+
+```{r}
+# plot the data
+plot(table81_96$GDP, table81_96$Consumption, main = 'Personal consumption expenditure (Y) in relation to GDP (X)', xlab = 'GDP', ylab = 'Personal consumption expenditure', type = 'o')
+```
+
+```{r}
+# fit a linear regression model on the data above
+consModel <- lm(Consumption ~ GDP, data = table81_96)
+summary(consModel)
+```
+The function we obtain when fitting the model above is:
+
+$$ 
+\hat{Y} = -184.077995 + 0.706408\times GDP
+$$
+
+It can be said that on average for a dollar increase in real income consumption the expenditure went up by 70 cents.  
+
+
+Make forecast for 1997 using the model developed above, when GDP for that year is equal to 7269.8.
+
+```{r}
+new = data.frame(GDP = 7269.8)
+predict(consModel, new)
+```
+
+Given the value of the GDP, the mean, or average, forecast consumption expenditure is about 4951 billion dollar. 
+
+
